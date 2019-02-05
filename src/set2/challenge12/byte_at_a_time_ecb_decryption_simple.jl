@@ -1,3 +1,7 @@
+module ByteAtATimeEcbDecryptionSimple
+
+using ..Set2
+
 export create_enc_oracle, byte_at_a_time_ecb_decrypt_simple
 
 #===== The encryptor side =====#
@@ -48,15 +52,7 @@ function get_block(data::AbstractVector{UInt8}, block_size::Integer, i::Integer)
     view(data, (block_size * (i - 1) + 1 : block_size * i))
 end
 
-function byte_at_a_time_ecb_decrypt_simple(encryption_oracle::Function)::Union{String, Nothing}
-    # Detects the block size.
-    block_size = detect_block_size(encryption_oracle)
-
-    # Makes sure it does be encoded in ECB mode.
-    if ecb_cbc_detection_oracle(encryption_oracle) != ECB::AesMode
-        return Nothing
-    end
-
+function crack_byte_at_a_time_ecb(encryption_oracle::Function, block_size::Integer)::Vector{UInt8}
     # Computes the number of blocks.
     ZERO_BLOCK = zeros(UInt8, block_size)
     n_blocks = length(encryption_oracle(UInt8[])) ÷ block_size
@@ -97,5 +93,22 @@ function byte_at_a_time_ecb_decrypt_simple(encryption_oracle::Function)::Union{S
 
 @label return_label
     # Have you ever seen the penguins?
-    return String(cracked)
+    cracked
 end
+
+function byte_at_a_time_ecb_decrypt_simple(encryption_oracle::Function)::Union{String, Nothing}
+    # Detects the block size.
+    block_size = detect_block_size(encryption_oracle)
+
+    # Currently `ecb_cbc_detection_oracle` can only deal with a block size of 16.
+    @assert block_size == 16 "Unsupported `block_size`"
+    # Makes sure it does be encoded in ECB mode.
+    if ecb_cbc_detection_oracle(encryption_oracle) != ECB::AesMode
+        return nothing
+    end
+
+    cracked = crack_byte_at_a_time_ecb(encryption_oracle, block_size)
+    String(cracked)
+end
+
+end  # module

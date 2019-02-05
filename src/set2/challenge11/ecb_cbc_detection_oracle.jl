@@ -1,6 +1,7 @@
 using Random: seed!
 
-export AesMode, encryption_oracle, encrypt_by_mode, ecb_cbc_detection_oracle, rand_aes_mode
+export AesMode, ECB, CBC,
+    encryption_oracle, encrypt_by_mode, ecb_cbc_detection_oracle, rand_aes_mode
 
 # Julia's enum sucks
 @enum AesMode begin

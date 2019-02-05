@@ -56,7 +56,7 @@ end
 using Nettle: decrypt
 "A reference implementation of AES-128 CBC decoder."
 function _aes_128_cbc_decode(ciphered::AbstractVector{UInt8},
-                            key::AbstractVector{UInt8})::Vector{UInt8}
+                             key::AbstractVector{UInt8})::Vector{UInt8}
     @assert length(key) == 16
     decrypt("AES128", :CBC, zeros(UInt8, 16), key, ciphered)
 end

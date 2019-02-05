@@ -46,6 +46,8 @@ end
 @testset "byte_at_a_time_ecb_decryption_simple" begin
     using Base64: base64decode
 
+    using CryptopalsCryptoChallenges.Set2.ByteAtATimeEcbDecryptionSimple
+
     secret = open("assets/challenge12.txt") do file
         base64decode(join(readlines(file)))
     end
