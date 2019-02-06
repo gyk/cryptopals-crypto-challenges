@@ -106,3 +106,12 @@ const Harder = ByteAtATimeEcbDecryptionHarder
     encryption_oracle = Harder.create_enc_oracle(secret)
     @test Harder.byte_at_a_time_ecb_decrypt_harder(encryption_oracle) == String(secret)
 end
+
+import ..Set2.CbcBitflippingAttacks
+const CBA = CbcBitflippingAttacks
+@testset "cbc_bitflipping_attacks" begin
+    admin = CBA.Admin()
+    CBA.make_fake_admin(admin)
+    enc_admindata = CBA.make_fake_admin(admin)
+    @test CBA.is_admin(CBA.decrypt_userdata(admin, enc_admindata))
+end

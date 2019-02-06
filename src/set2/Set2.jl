@@ -7,5 +7,6 @@ include("challenge12/byte_at_a_time_ecb_decryption_simple.jl")
 include("challenge13/ecb_cut_and_paste.jl")
 include("challenge14/byte_at_a_time_ecb_decryption_harder.jl")
 include("challenge15/pkcs7_validate.jl")
+include("challenge16/cbc_bitflipping_attacks.jl")
 
 end

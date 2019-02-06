@@ -5,7 +5,7 @@ My solutions to the [Matasano Crypto Challenges](https://cryptopals.com) in Juli
 Progress:
 
 - [X] Set 1: Basics
-- [ ] Set 2: Block crypto
+- [X] Set 2: Block crypto
 - [ ] Set 3: Block & stream crypto
 - [ ] Set 4: Stream crypto and randomness
 - [ ] Set 5: Diffie-Hellman and friends
