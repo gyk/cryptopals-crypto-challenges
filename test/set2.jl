@@ -27,10 +27,11 @@ end
     end
 
     key = b"YELLOW SUBMARINE"
-    deciphered = aes_128_cbc_decode(ciphered, key)
+    iv = rand(UInt8, 16)
+    deciphered = aes_128_cbc_decode(ciphered, key, iv)
     deciphered
 
-    expected = Set2._aes_128_cbc_decode(ciphered, key)
+    expected = Set2._aes_128_cbc_decode(ciphered, key, iv)
     @test deciphered == expected
 end
 
@@ -56,15 +57,17 @@ const Simple = ByteAtATimeEcbDecryptionSimple
     @test Simple.byte_at_a_time_ecb_decrypt_simple(encryption_oracle) == String(secret)
 end
 
+import ..Set2.EcbCutAndPaste
+const ECP = EcbCutAndPaste
 @testset "ecb_cut_and_paste" begin
     user = "foo@bar.com"
-    user_profile = profile_for(user)
-    admin = Admin()
-    enc_user_profile = encrypt_user_profile(admin, user_profile)
-    @assert !is_admin(decrypt_user_profile(admin, enc_user_profile))
+    user_profile = ECP.profile_for(user)
+    admin = ECP.Admin()
+    enc_user_profile = ECP.encrypt_user_profile(admin, user_profile)
+    @assert !ECP.is_admin(ECP.decrypt_user_profile(admin, enc_user_profile))
 
-    enc_admin_profile = lift_to_admin(enc_user_profile, admin)
-    @test is_admin(decrypt_user_profile(admin, enc_admin_profile))
+    enc_admin_profile = ECP.lift_to_admin(enc_user_profile, admin)
+    @test ECP.is_admin(ECP.decrypt_user_profile(admin, enc_admin_profile))
 end
 
 @testset "pkcs7_validate" begin
@@ -90,7 +93,7 @@ end
     @test_throws BoundsError pkcs7_remove!(data)
 end
 
-using ..Set2.ByteAtATimeEcbDecryptionHarder
+import ..Set2.ByteAtATimeEcbDecryptionHarder
 const Harder = ByteAtATimeEcbDecryptionHarder
 @testset "byte_at_a_time_ecb_decryption_harder" begin
     using Base64: base64decode

@@ -1,4 +1,7 @@
+module EcbCutAndPaste
+
 using CryptopalsCryptoChallenges.Set1: aes_128_ecb_decode
+using ..Set2
 
 # NOTE: Nettle's `trim_padding_PKCS5` is indeed a loose implementation that neither checks the
 # padded bytes nor padding length. As a result it can also be used for PKCS#7.
@@ -72,3 +75,5 @@ function lift_to_admin(enc_user_profile::Vector{UInt8}, profile_oracle::Admin)::
     partial_block = encrypted_profile_for(profile_oracle, probe_email)
     [partial_block[1:32]; admin_block]
 end
+
+end  # module
