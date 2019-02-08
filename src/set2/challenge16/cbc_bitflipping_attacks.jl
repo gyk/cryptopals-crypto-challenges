@@ -5,9 +5,9 @@ using ..ByteAtATimeEcbDecryptionSimple: get_block
 
 # NOTE: Nettle's `trim_padding_PKCS5` is indeed a loose implementation that neither checks the
 # padded bytes nor padding length. As a result it can also be used for PKCS#7.
-import Nettle: trim_padding_PKCS5
+using Nettle: trim_padding_PKCS5
 
-export add_comments, is_admin, Admin, encrypt_userdata, decrypt_userdata, make_fake_admin
+export add_comments, is_admin, Server, encrypt_userdata, decrypt_userdata, make_fake_admin
 
 # Assumes these are already known to the cracker
 const PREFIX = b"comment1=cooking%20MCs;userdata="
@@ -42,25 +42,25 @@ function is_admin(profile_kv::String)::Bool
     haskey(kv, "admin") && kv["admin"] == "true"
 end
 
-struct Admin
+struct Server
     key::Vector{UInt8}
     iv::Vector{UInt8}
 
-    Admin() = new(rand(UInt8, 16), rand(UInt8, 16))  # a very random pair of AES key/IV
+    Server() = new(rand(UInt8, 16), rand(UInt8, 16))  # a very random pair of AES key/IV
 end
 
-function encrypt_userdata(admin::Admin, userdata::String)::Vector{UInt8}
+function encrypt_userdata(svr::Server, userdata::String)::Vector{UInt8}
     bytes = add_comments(userdata)
     pkcs7_padding!(bytes, 16)
-    aes_128_cbc_encode(bytes, admin.key, admin.iv)  # FIXME: IV?
+    aes_128_cbc_encode(bytes, svr.key, svr.iv)  # FIXME: IV?
 end
 
-function decrypt_userdata(admin::Admin, userdata::Vector{UInt8})::String
-    String(trim_padding_PKCS5(aes_128_cbc_decode(userdata, admin.key, admin.iv)))
+function decrypt_userdata(svr::Server, userdata::Vector{UInt8})::String
+    String(trim_padding_PKCS5(aes_128_cbc_decode(userdata, svr.key, svr.iv)))
 end
 
 #===== Cracker =====#
-function make_fake_admin(admin::Admin)::Vector{UInt8}
+function make_fake_admin(svr::Server)::Vector{UInt8}
     prefix_padding_len = mod(-length(PREFIX), 16)
     fake_admin = String([UInt8('a') for _ in 1:(prefix_padding_len + 16 * 2)])
     n_prefix_blocks = (length(PREFIX) + prefix_padding_len) ÷ 16
@@ -69,8 +69,8 @@ function make_fake_admin(admin::Admin)::Vector{UInt8}
 
     ADMIN_BLOCK = [ADMIN_KV; [UInt8('a') for _ in 1:ADMIN_PADDING_LEN]...]
 
-    enc = encrypt_userdata(admin, fake_admin)
-    dec = decrypt_userdata(admin, enc)
+    enc = encrypt_userdata(svr, fake_admin)
+    dec = decrypt_userdata(svr, enc)
     dec = Vector{UInt8}(dec)
 
     bitflipping = get_block(dec, 16, i_fake_admin_block) .⊻ ADMIN_BLOCK

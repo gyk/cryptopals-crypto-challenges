@@ -1,4 +1,4 @@
-import Nettle: Decryptor, decrypt
+using Nettle: Decryptor, decrypt
 
 export aes_128_ecb_decode
 

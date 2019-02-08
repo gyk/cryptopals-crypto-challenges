@@ -62,12 +62,12 @@ const ECP = EcbCutAndPaste
 @testset "ecb_cut_and_paste" begin
     user = "foo@bar.com"
     user_profile = ECP.profile_for(user)
-    admin = ECP.Admin()
-    enc_user_profile = ECP.encrypt_user_profile(admin, user_profile)
-    @assert !ECP.is_admin(ECP.decrypt_user_profile(admin, enc_user_profile))
+    svr = ECP.Server()
+    enc_user_profile = ECP.encrypt_user_profile(svr, user_profile)
+    @assert !ECP.is_admin(ECP.decrypt_user_profile(svr, enc_user_profile))
 
-    enc_admin_profile = ECP.lift_to_admin(enc_user_profile, admin)
-    @test ECP.is_admin(ECP.decrypt_user_profile(admin, enc_admin_profile))
+    enc_admin_profile = ECP.lift_to_admin(enc_user_profile, svr)
+    @test ECP.is_admin(ECP.decrypt_user_profile(svr, enc_admin_profile))
 end
 
 @testset "pkcs7_validate" begin
@@ -110,8 +110,8 @@ end
 import ..Set2.CbcBitflippingAttacks
 const CBA = CbcBitflippingAttacks
 @testset "cbc_bitflipping_attacks" begin
-    admin = CBA.Admin()
-    CBA.make_fake_admin(admin)
-    enc_admindata = CBA.make_fake_admin(admin)
-    @test CBA.is_admin(CBA.decrypt_userdata(admin, enc_admindata))
+    svr = CBA.Server()
+    CBA.make_fake_admin(svr)
+    enc_admindata = CBA.make_fake_admin(svr)
+    @test CBA.is_admin(CBA.decrypt_userdata(svr, enc_admindata))
 end

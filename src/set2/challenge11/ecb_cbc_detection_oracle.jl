@@ -36,15 +36,14 @@ function encrypt_by_mode(plaintext::AbstractVector{UInt8},
                          mode::AesMode)::Vector{UInt8}
     key = gen_key_iv()
     new_text = preprocess(plaintext)
+    pkcs7_padding!(new_text, 16)
     _encrypt_impl(new_text, key, Val(mode))
 end
 
 function _encrypt_impl(text::AbstractVector{UInt8},
                        key::Vector{UInt8},
                        ::Val{ECB::AesMode})::Vector{UInt8}
-    text_aligned = collect(text)
-    pkcs7_padding!(text_aligned, 16)
-    aes_128_ecb_encode(text_aligned, key)
+    aes_128_ecb_encode(text, key)
 end
 
 function _encrypt_impl(text::AbstractVector{UInt8},
