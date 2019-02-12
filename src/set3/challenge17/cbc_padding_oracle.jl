@@ -19,8 +19,8 @@ function encrypt_random(server::Server,
                         plaintext::Vector{UInt8})::Tuple{Vector{UInt8}, Vector{UInt8}}
     pkcs7_padding!(plaintext, 16)
     iv = rand(UInt8, 16)
-    ciphertex = aes_128_cbc_encode(plaintext, server.key, iv)
-    (ciphertex, iv)
+    ciphertext = aes_128_cbc_encode(plaintext, server.key, iv)
+    (ciphertext, iv)
 end
 
 function check_pkcs7(data::AbstractVector{UInt8})::Bool

@@ -48,6 +48,8 @@ CHAR_SET = UInt8.(vcat('A':'Z', 'a':'z', ' '))
 CHAR_TO_IDX = Dict(Iterators.zip(CHAR_SET, vcat(1:26, 1:26, 27)))
 IDX_TO_CHAR = Dict(Iterators.enumerate(CHAR_SET))
 
+const INVALID_PENALTY = 2.0
+
 function freq_vector(s::AbstractVector{UInt8})::Vector{Float64}
     freq_vec = zeros(Float64, length(LETTER_FREQUENCY))
     freq = @view freq_vec[1:(end - 1)];
@@ -60,7 +62,7 @@ function freq_vector(s::AbstractVector{UInt8})::Vector{Float64}
         if haskey(CHAR_TO_IDX, ch)
             freq[CHAR_TO_IDX[ch]] += 1
         else
-            n_invalid += 1
+            n_invalid += INVALID_PENALTY
         end
     end
 
