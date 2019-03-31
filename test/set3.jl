@@ -85,3 +85,53 @@ end
         @test true_percentage > 0.9
     end
 end
+
+import ..Set3.MersenneTwister
+@testset "mersenne_twister" begin
+    mt = MersenneTwister.MtRandom()
+
+    # https://oeis.org/A221557
+    N = 624
+    seq = [MersenneTwister.extract_number!(mt) for i in 1:(N * 2 + 1)]
+    @test seq[1:3] == [0xD091BB5C, 0x22AE9EF6, 0xE7E1FAEE]
+    @test seq[N] == 0xEFA14DFF
+    @test seq[N + 1] == 0xF914DC58
+    @test seq[N * 2 + 1] == 0x155F212F
+end
+
+@testset "crack_mt_seed" begin
+    wait_seconds = 4:20  # FIXME: Should be 40:1000, but I'm impatient.
+    (seed, number) = generate_mt19937_random(wait_seconds)
+    @test crack_mt19937_seed(wait_seconds, number) == seed
+end
+
+import ..Set3.MersenneTwister
+@testset "clone_mt" begin
+    N = 624
+    seed = rand(UInt32)
+
+    mt = MersenneTwister.MtRandom(seed)
+    tapped = [MersenneTwister.extract_number!(mt) for i in 1:N]
+    internal_state = [untemper(tapped[i], mt.param) for i in 1:N]
+    mt_cloned = MersenneTwister.MtRandom()
+    mt_cloned.state = internal_state
+    @test all([
+        MersenneTwister.extract_number!(mt) == MersenneTwister.extract_number!(mt_cloned)
+        for i in 1:(N + 1)
+    ])
+end
+
+@testset "break_mt_stream_cipher" begin
+    using Random: randstring
+    secret = join(randstring(['A':'Z'; 'a':'z'], rand(20:50))) * ('A' ^ 14)
+    secret_bytes = Vector{UInt8}(secret)
+    key = rand(UInt16)
+    encrypted = mt19937_cipher(secret_bytes, key)
+    decrypted = mt19937_cipher(encrypted, key)
+    @test secret_bytes == decrypted
+    @test key == recover_mt19937_seed(encrypted, Vector{UInt8}('A' ^ 14))
+
+    pswd_rst_tk = generate_password_reset_token()
+    sleep(rand(5:10))
+    @test is_valid_password_reset_token(pswd_rst_tk)
+end

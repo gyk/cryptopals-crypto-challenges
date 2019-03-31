@@ -6,7 +6,7 @@ Progress:
 
 - [X] Set 1: Basics
 - [X] Set 2: Block crypto
-- [ ] Set 3: Block & stream crypto
+- [X] Set 3: Block & stream crypto
 - [ ] Set 4: Stream crypto and randomness
 - [ ] Set 5: Diffie-Hellman and friends
 - [ ] Set 6: RSA and DSA
