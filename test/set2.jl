@@ -111,7 +111,6 @@ import ..Set2.CbcBitflippingAttacks
 const CBA = CbcBitflippingAttacks
 @testset "cbc_bitflipping_attacks" begin
     svr = CBA.Server()
-    CBA.make_fake_admin(svr)
     enc_admindata = CBA.make_fake_admin(svr)
     @test CBA.is_admin(CBA.decrypt_userdata(svr, enc_admindata))
 end

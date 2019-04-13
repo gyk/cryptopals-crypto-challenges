@@ -70,10 +70,7 @@ function make_fake_admin(svr::Server)::Vector{UInt8}
     ADMIN_BLOCK = [ADMIN_KV; [UInt8('a') for _ in 1:ADMIN_PADDING_LEN]...]
 
     enc = encrypt_userdata(svr, fake_admin)
-    dec = decrypt_userdata(svr, enc)
-    dec = Vector{UInt8}(dec)
-
-    bitflipping = get_block(dec, 16, i_fake_admin_block) .⊻ ADMIN_BLOCK
+    bitflipping = [UInt8('a') for _ in 1:16] .⊻ ADMIN_BLOCK
     bitflipping_block = get_block(enc, 16, i_bitflipping_block)  # reference returned
     bitflipping_block .⊻= bitflipping
 
