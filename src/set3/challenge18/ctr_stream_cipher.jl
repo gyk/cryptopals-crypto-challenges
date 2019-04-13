@@ -5,13 +5,13 @@ export aes_128_ctr
 # `data` can either be plaintext or ciphertext.
 function aes_128_ctr(data::AbstractVector{UInt8},
                      key::AbstractVector{UInt8},
-                     nonce::Int64)::Vector{UInt8}
+                     nonce::Int64,
+                     counter::UInt64=UInt64(0))::Vector{UInt8}
     @assert length(key) == 16
     # It is named `ciphertext` but actually should be plaintext in decryption mode.
     ciphertext = Array{UInt8}(undef, length(data))
     empty!(ciphertext)
     nonce_bytes = reinterpret(UInt8, [htol(nonce)])
-    counter::UInt64 = 0
 
     for b in Iterators.partition(data, 16)
         counter_bytes = reinterpret(UInt8, [htol(counter)])
