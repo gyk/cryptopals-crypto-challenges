@@ -27,3 +27,10 @@ const CtrBA = CtrBitflippingAttacks
     enc_admindata = CtrBA.make_fake_admin(svr)
     @test CtrBA.is_admin(CtrBA.decrypt_userdata(svr, enc_admindata))
 end
+
+import ..Set4.CbcWithIvEqKey
+@testset "cbc_iv_eq_key" begin
+    svr = CbcWithIvEqKey.Server()
+    recovered_key = CbcWithIvEqKey.recover_key_with_iv_eq_key(svr)
+    @test svr.key == recovered_key
+end
