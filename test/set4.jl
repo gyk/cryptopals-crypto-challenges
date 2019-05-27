@@ -20,7 +20,7 @@ using CryptopalsCryptoChallenges.Set3: aes_128_ctr
         plaintext[OFFSET:(OFFSET + length(NEW_TEXT) - 1)]
 end
 
-import ..Set4.CtrBitflippingAttacks
+import CryptopalsCryptoChallenges.Set4.CtrBitflippingAttacks
 const CtrBA = CtrBitflippingAttacks
 @testset "ctr_bitflipping_attacks" begin
     svr = CtrBA.Server()
@@ -28,7 +28,7 @@ const CtrBA = CtrBitflippingAttacks
     @test CtrBA.is_admin(CtrBA.decrypt_userdata(svr, enc_admindata))
 end
 
-import ..Set4.CbcWithIvEqKey
+import CryptopalsCryptoChallenges.Set4.CbcWithIvEqKey
 @testset "cbc_iv_eq_key" begin
     svr = CbcWithIvEqKey.Server()
     recovered_key = CbcWithIvEqKey.recover_key_with_iv_eq_key(svr)
@@ -55,4 +55,14 @@ using CryptopalsCryptoChallenges.Set2.CbcBitflippingAttacks: is_admin
 
     @test is_admin(String(copy(forged_message_no_key))) &&
         sha1_mac(forged_message_no_key, key) == forged_sha1
+end
+
+using CryptopalsCryptoChallenges.Set2.CbcBitflippingAttacks: is_admin
+@testset "break_md5_mac" begin
+    key = Vector{UInt8}("The quick brown fox")
+    md5_mac_oracle(message::AbstractVector{UInt8}) = md5_mac(message, key)
+    (forged_message_no_key, forged_md5) = forge_md5(md5_mac_oracle)
+
+    @test is_admin(String(copy(forged_message_no_key))) &&
+        md5_mac(forged_message_no_key, key) == forged_md5
 end
