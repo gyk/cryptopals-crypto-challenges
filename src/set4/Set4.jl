@@ -6,5 +6,6 @@ include("challenge27/cbc_iv_eq_key.jl")
 include("challenge28/sha1_mac.jl")
 include("challenge29/break_sha1_mac.jl")
 include("challenge30/break_md5_mac.jl")
+include("challenge31to32/break_hmac_sha1_timing.jl")
 
 end

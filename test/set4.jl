@@ -66,3 +66,22 @@ using CryptopalsCryptoChallenges.Set2.CbcBitflippingAttacks: is_admin
     @test is_admin(String(copy(forged_message_no_key))) &&
         md5_mac(forged_message_no_key, key) == forged_md5
 end
+
+@testset "break_hmac_sha1_timing" begin
+    # Challenge 31 and 32 take too much time to run, so skip them in unittests.
+    #
+    # Instructions on manually running the code:
+    #
+    #  1. The IO-agnostic version
+    #
+    #     mock_runner = MockRunner()
+    #     break_hmac_sha1(mock_runner, "foo")
+    #
+    # 2. The HTTP version
+    #
+    #     @async http_serve()  # starts the server
+    #
+    #     http_runner = HttpRunner()
+    #     break_hmac_sha1(http_runner, "foo")
+    #
+end
