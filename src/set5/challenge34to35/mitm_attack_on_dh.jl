@@ -1,27 +1,11 @@
 using Nettle: trim_padding_PKCS5
 using SHA: sha1
 
+using CryptopalsCryptoChallenges.Util: convert
 using CryptopalsCryptoChallenges.Set2: aes_128_cbc_encode, aes_128_cbc_decode, pkcs7_padding!
 
 export run_dh_normal, run_dh_mitm
 export ManInTheMiddle, ManInTheMiddleGEq1, ManInTheMiddleGEqP, ManInTheMiddleGEqPMinus1
-
-"`BigInt` -> `Vector{UInt8}` conversion"
-function convert(::Type{Vector{UInt8}}, x::BigInt)
-    sz = div(ndigits(x, base=2) + 8 - 1, 8)
-    bytes = UInt8[]
-    sizehint!(bytes, sz)
-    while x != 0
-        push!(bytes, x & 255)
-        x >>= 8
-    end
-    reverse!(bytes)
-end
-
-"`Vector{UInt8}` -> `BigInt` conversion"
-function convert(::Type{BigInt}, v::Vector{UInt8})
-    foldl((acc, b) -> (acc << 8) + b, v; init=big(0))
-end
 
 const BIDU_MSG = Vector{UInt8}("What's your problem?")
 
