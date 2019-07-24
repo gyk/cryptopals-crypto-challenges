@@ -18,3 +18,16 @@ end
     @test run_dh_mitm(ManInTheMiddleGEqP())
     @test run_dh_mitm(ManInTheMiddleGEqPMinus1())
 end
+
+using CryptopalsCryptoChallenges.Set5.SRP: run_srp
+@testset "srp" begin
+    @test run_srp()
+end
+
+using CryptopalsCryptoChallenges.Set5.SRPBad: run_srp_bad, run_srp_mitm
+@testset "srp_bad" begin
+    @test run_srp_bad()
+
+    dict = readlines("assets/dict.txt")
+    @test run_srp_mitm(dict)
+end
