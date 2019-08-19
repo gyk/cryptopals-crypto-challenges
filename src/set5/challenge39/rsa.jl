@@ -72,13 +72,18 @@ function random_prime(n_bits::Int)::BigInt
 end
 
 struct RSA
+    key_size::Int
     public_key::Tuple{BigInt, BigInt}
     private_key::Tuple{BigInt, BigInt}
 
-    function RSA(keysize::Int, e::BigInt=big(65537))
+    function RSA(key_size::Int, e::BigInt=big(65537))
+        if key_size % 8 != 0
+            error("`key_size` is not a multiple of 8")
+        end
+
         while true
-            p = random_prime(keysize ÷ 2)
-            q = random_prime(keysize ÷ 2)
+            p = random_prime(key_size ÷ 2)
+            q = random_prime(key_size ÷ 2)
             if p == q
                 continue
             end
@@ -94,7 +99,7 @@ struct RSA
             d = coprime_inv_mod(e, totient)
             pub_key = (e, n)
             pri_key = (d, n)
-            return new(pub_key, pri_key)
+            return new(key_size, pub_key, pri_key)
         end
     end
 end

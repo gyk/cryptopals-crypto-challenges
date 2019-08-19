@@ -35,7 +35,6 @@ end
 using CryptopalsCryptoChallenges.Set5: RSA, rsa_encrypt, rsa_decrypt
 @testset "rsa" begin
     rsa = RSA(10, big(3))
-    println("RSA = $rsa")
 
     m = big(42)
     c = rsa_encrypt(rsa, m)

@@ -1,4 +1,4 @@
-export RSAServer, encrypt_3_times_and_crack_message
+export RSAServer, encrypt_3_times_and_crack_message, nth_root
 
 # https://en.wikipedia.org/wiki/Nth_root_algorithm
 """
