@@ -49,3 +49,27 @@ using CryptopalsCryptoChallenges.Util: convert
     sig = sign_dsa(dsa, MESSAGE)
     @test verify_dsa(dsa, MESSAGE, sig)
 end
+
+using SHA: sha1
+@testset "dsa_nonce_recover_from_repeated_nonce" begin
+    sigs = read_dsa_signed_msg_file("assets/challenge44.txt")
+    x = nothing
+
+    r_to_sig_dict = Dict()
+    for s in sigs
+        if haskey(r_to_sig_dict, s.r)
+            sig1 = r_to_sig_dict[s.r]
+            sig2 = s
+            k = dsa_nonce_recover_from_repeated_nonce(sig1, sig2)
+            x = dsa_private_key_from_nonce(k, sig1)
+            break
+        else
+            r_to_sig_dict[s.r] = s
+        end
+    end
+
+    if x === nothing
+        error("Cannot recover DSA nonce")
+    end
+    @test sha1(string(x, base=16)) == hex2bytes("ca8f6f7c66fa362d40760d135b763eb8527d3d52")
+end
