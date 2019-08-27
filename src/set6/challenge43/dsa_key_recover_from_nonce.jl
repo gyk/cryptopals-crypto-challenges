@@ -2,7 +2,7 @@ using SHA: sha1
 
 using CryptopalsCryptoChallenges.Util: convert
 
-export DSA, default_dsa, sign_dsa, verify_dsa, recover_dsa_key_nonce
+export DSA, default_dsa, dsa_sign, dsa_verify, recover_dsa_key_nonce
 
 const DSA_P = parse(BigInt,
     """0x
@@ -48,7 +48,7 @@ function default_dsa()::DSA
     DSA(p, q, g, x, y)
 end
 
-function sign_dsa(dsa::DSA, message::Vector{UInt8})::Tuple{BigInt, BigInt}
+function dsa_sign(dsa::DSA, message::Vector{UInt8})::Tuple{BigInt, BigInt}
     p, q, g, x = dsa.p, dsa.q, dsa.g, dsa.x
     digest = sha1(message)
     h = convert(BigInt, digest)
@@ -70,7 +70,7 @@ function sign_dsa(dsa::DSA, message::Vector{UInt8})::Tuple{BigInt, BigInt}
     (r, s)
 end
 
-function verify_dsa(dsa::DSA, message::Vector{UInt8}, signature::Tuple{BigInt, BigInt})::Bool
+function dsa_verify(dsa::DSA, message::Vector{UInt8}, signature::Tuple{BigInt, BigInt})::Bool
     (r, s) = signature
     p, q, g, y = dsa.p, dsa.q, dsa.g, dsa.y
     digest = sha1(message)

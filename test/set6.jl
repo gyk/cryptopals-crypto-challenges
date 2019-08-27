@@ -46,8 +46,8 @@ using CryptopalsCryptoChallenges.Util: convert
         DSA(dsa.p, dsa.q, dsa.g, x, Y)
     end
 
-    sig = sign_dsa(dsa, MESSAGE)
-    @test verify_dsa(dsa, MESSAGE, sig)
+    sig = dsa_sign(dsa, MESSAGE)
+    @test dsa_verify(dsa, MESSAGE, sig)
 end
 
 using SHA: sha1
@@ -84,6 +84,6 @@ end
     @test dsa_verify_g_eq_0(dsa, goodbye, sig0)
 
     dsa = default_dsa() |> dsa_tamper_param_g_eq_p_plus_1
-    sig1 = sign_dsa(dsa, hello)
-    @test verify_dsa(dsa, goodbye, sig1)
+    sig1 = dsa_sign(dsa, hello)
+    @test dsa_verify(dsa, goodbye, sig1)
 end

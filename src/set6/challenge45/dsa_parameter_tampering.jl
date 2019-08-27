@@ -31,7 +31,7 @@ function dsa_sign_g_eq_0(dsa::DSA, message::Vector{UInt8})::Tuple{BigInt, BigInt
     (r, s)
 end
 
-# Removes the `0 < r < q && 0 < s < q` condition from the original DSA verification.
+# The same as `dsa_verify` but does not check the condition `0 < r < q && 0 < s < q`.
 function dsa_verify_g_eq_0(dsa::DSA, message::Vector{UInt8}, signature::Tuple{BigInt, BigInt})::Bool
     (r, s) = signature
     p, q, g, y = dsa.p, dsa.q, dsa.g, dsa.y
