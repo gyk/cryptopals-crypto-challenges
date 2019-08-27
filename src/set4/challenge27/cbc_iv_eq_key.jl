@@ -72,7 +72,7 @@ function recover_key_with_iv_eq_key(svr::Server)::Vector{UInt8}
     get_block(encrypted_url, 16, 3) .= get_block(encrypted_url, 16, 1)
 
     check_result = check_url(svr, encrypted_url)
-    if check_result == nothing
+    if check_result === nothing
         error("Checking ASCII compliance passed. WTF?")
     end
 

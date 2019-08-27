@@ -133,7 +133,7 @@ function rsa_forge_signature(rsa::RSA, digest::Vector{UInt8})::Vector{UInt8}
             # This branch is unreachable because I have made `n_padding` sufficiently larger than
             # `prefix_len`. More specifically, if we can make sure that the inequation
             #
-            #     b = 2 ^ ((3 + 36) * 8 - 8 - 6) = 298
+            #     b = 2 ^ ((3 + 36) * 8 - 8 - 6) = 2 ^ 298
             #     p = 1024 - (3 + 36) * 8 = 712
             #     (3 b^2 + 3 b + 1) < (2 ^ p)
             #
@@ -146,7 +146,7 @@ end
 macro try_nothing(maybe)
     quote
         maybe = $(esc(maybe))
-        if maybe == nothing
+        if maybe === nothing
             return false
         else
             maybe
