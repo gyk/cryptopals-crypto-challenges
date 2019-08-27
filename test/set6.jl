@@ -73,3 +73,17 @@ using SHA: sha1
     end
     @test sha1(string(x, base=16)) == hex2bytes("ca8f6f7c66fa362d40760d135b763eb8527d3d52")
 end
+
+@testset "dsa_parameter_tampering" begin
+    hello = Vector{UInt8}("Hello, world")
+    goodbye = Vector{UInt8}("Goodbye, world")
+
+    dsa = default_dsa() |> dsa_tamper_param_g_eq_0
+    sig0 = dsa_sign_g_eq_0(dsa, hello)
+    @test dsa_verify_g_eq_0(dsa, hello, sig0)
+    @test dsa_verify_g_eq_0(dsa, goodbye, sig0)
+
+    dsa = default_dsa() |> dsa_tamper_param_g_eq_p_plus_1
+    sig1 = sign_dsa(dsa, hello)
+    @test verify_dsa(dsa, goodbye, sig1)
+end
