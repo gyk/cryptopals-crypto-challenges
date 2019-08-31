@@ -87,3 +87,16 @@ end
     sig1 = dsa_sign(dsa, hello)
     @test dsa_verify(dsa, goodbye, sig1)
 end
+
+using Base64: base64decode
+using CryptopalsCryptoChallenges.Set5: RSA, rsa_encrypt
+@testset "rsa_parity_oracle" begin
+    plaintext_base64 = "VGhhdCdzIHdoeSBJIGZvdW5kIHlvdSBkb24ndCBwbGF5IGFyb3VuZCB3aXRoIHRoZSBGdW5reSBDb2xkIE1lZGluYQ=="
+    plaintext = base64decode(plaintext_base64)
+
+    rsa = RSA(1024)
+    ciphertext = rsa_encrypt(rsa, plaintext)
+    rsa_oracle = make_rsa_parity_oracle(rsa)
+    plaintext_recovered = recover_rsa_message(ciphertext, rsa_oracle, rsa.public_key)
+    @test plaintext_recovered == plaintext
+end
