@@ -1,7 +1,7 @@
 #=
 
-Notes on Hal Finney's Writeup
-=============================
+Notes on Hal Finney's Write-up
+==============================
 
 Link: <https://mailarchive.ietf.org/arch/msg/openpgp/5rnE9ZRN1AokBVj3VqblGlP63QE>
 

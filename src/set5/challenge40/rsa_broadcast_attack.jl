@@ -2,7 +2,7 @@ export RSAServer, encrypt_3_times_and_crack_message, nth_root
 
 # https://en.wikipedia.org/wiki/Nth_root_algorithm
 """
-Comptes `n`-th root of `a` using Newton's method.
+Computes `n`-th root of `a` using Newton's method.
 
 Precondition: `a` does be a `n`-th perfect power. If not, the returned value is not always the
 closest approximation.

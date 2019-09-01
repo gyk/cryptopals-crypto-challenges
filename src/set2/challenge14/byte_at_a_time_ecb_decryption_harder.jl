@@ -81,7 +81,7 @@ function byte_at_a_time_ecb_decrypt_harder(encryption_oracle::Function)::Union{S
         end
     end
 
-    @assert fill_len != nothing
+    @assert !isnothing(fill_len)
     fill = zeros(UInt8, fill_len)
 
     prefixed_enc_oracle(x) = encryption_oracle([fill; x])[block_size * i_probe + 1 : end]
