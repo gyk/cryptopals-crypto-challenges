@@ -9,6 +9,6 @@ Progress:
 - [X] Set 3: Block & stream crypto
 - [X] Set 4: Stream crypto and randomness
 - [X] Set 5: Diffie-Hellman and friends
-- [ ] Set 6: RSA and DSA
+- [X] Set 6: RSA and DSA
 - [ ] Set 7: Hashes
 - [ ] Set 8: Abstract Algebra

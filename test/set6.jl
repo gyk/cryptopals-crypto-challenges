@@ -100,3 +100,17 @@ using CryptopalsCryptoChallenges.Set5: RSA, rsa_encrypt
     plaintext_recovered = recover_rsa_message(ciphertext, rsa_oracle, rsa.public_key)
     @test plaintext_recovered == plaintext
 end
+
+using CryptopalsCryptoChallenges.Set5: RSA, rsa_encrypt
+@testset "bleichenbacher_pkcs_padding_oracle" begin
+    plaintext = Vector{UInt8}("kick it, CC")
+    rsa = RSA(768)
+    (_, n) = rsa.public_key
+    ciphertext = rsa_encrypt(rsa, pkcs1_pad(plaintext, n))
+
+    function padding_oracle(c::BigInt)::Bool
+        check_pkcs1_conforming(rsa, c)
+    end
+
+    @test plaintext == bb_padding_oracle_attack(ciphertext, rsa.public_key, padding_oracle)
+end
