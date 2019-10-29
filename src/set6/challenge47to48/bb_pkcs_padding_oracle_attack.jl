@@ -76,8 +76,19 @@ end
 
 ## Boundaries are tricky to get right.
 
+# Another implementation for `divGtEq` is
+#
+#     (x + y - 1) ÷ y
+#
+# and another implementation for `divLt` is
+#
+#     (x + y - 1) ÷ y - 1
+#
+# but benchmarks show the `divrem` approaches are slightly faster.
+# Also note that the behavior of `÷` in Julia is different from `//` in Python.
+
 # x / y ⩽ z, or z = ⌈x / y⌉...
-function divGtEq(x::BigInt, y::BigInt)::BigInt
+@inline function divGtEq(x::BigInt, y::BigInt)::BigInt
     (q, r) = divrem(x, y)
     if r == 0
         q
@@ -87,17 +98,17 @@ function divGtEq(x::BigInt, y::BigInt)::BigInt
 end
 
 # z ⩽ x / y, or z = ...⌊x / y⌋
-function divLtEq(x::BigInt, y::BigInt)::BigInt
+@inline function divLtEq(x::BigInt, y::BigInt)::BigInt
     x ÷ y
 end
 
 # x / y < z
-function divGt(x::BigInt, y::BigInt)::BigInt
+@inline function divGt(x::BigInt, y::BigInt)::BigInt
     x ÷ y + 1
 end
 
 # z < x / y
-function divLt(x::BigInt, y::BigInt)::BigInt
+@inline function divLt(x::BigInt, y::BigInt)::BigInt
     (q, r) = divrem(x, y)
     if r == 0
         q - 1
