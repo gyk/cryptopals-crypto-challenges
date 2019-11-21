@@ -3,7 +3,7 @@ module CbcPaddingOracle
 using Base64: base64decode
 using Nettle: trim_padding_PKCS5
 
-using CryptopalsCryptoChallenges.Set2: pkcs7_padding!, aes_128_cbc_encode, aes_128_cbc_decode
+using CryptopalsCryptoChallenges.Set2: pkcs7_padding, aes_128_cbc_encode, aes_128_cbc_decode
 using CryptopalsCryptoChallenges.Set2.ByteAtATimeEcbDecryptionSimple: get_block
 
 struct Server
@@ -17,9 +17,8 @@ end
 "Returns a pair of `(ciphertext, iv)`."
 function encrypt_random(server::Server,
                         plaintext::Vector{UInt8})::Tuple{Vector{UInt8}, Vector{UInt8}}
-    pkcs7_padding!(plaintext, 16)
     iv = rand(UInt8, 16)
-    ciphertext = aes_128_cbc_encode(plaintext, server.key, iv)
+    ciphertext = aes_128_cbc_encode(pkcs7_padding(plaintext, 16), server.key, iv)
     (ciphertext, iv)
 end
 

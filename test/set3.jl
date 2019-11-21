@@ -21,7 +21,7 @@ const CPO = CbcPaddingOracle
 
     server = CPO.Server()
     plaintext = Vector{UInt8}(rand(STRINGS, 1)[1])
-    (ciphertext, iv) = CPO.encrypt_random(server, copy(plaintext))
+    (ciphertext, iv) = CPO.encrypt_random(server, plaintext)
     cracked = CPO.crack(server, ciphertext, iv)
     @test plaintext == cracked
 end

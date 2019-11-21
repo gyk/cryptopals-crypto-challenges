@@ -3,8 +3,12 @@ using CryptopalsCryptoChallenges.Set2
 
 @testset "pkcs7_padding" begin
     text = UInt8.(b"YELLOW SUBMARINE")
-    pkcs7_padding!(text, 20)
     expected_after_padding = b"YELLOW SUBMARINE\x04\x04\x04\x04"
+    # Non in-place
+    padded_text = pkcs7_padding(text, 20)
+    @test padded_text == expected_after_padding
+    # In-place
+    pkcs7_padding!(text, 20)
     @test text == expected_after_padding
 
     # Some edge cases

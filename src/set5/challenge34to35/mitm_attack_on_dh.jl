@@ -2,7 +2,7 @@ using Nettle: trim_padding_PKCS5
 using SHA: sha1
 
 using CryptopalsCryptoChallenges.Util: convert
-using CryptopalsCryptoChallenges.Set2: aes_128_cbc_encode, aes_128_cbc_decode, pkcs7_padding!
+using CryptopalsCryptoChallenges.Set2: aes_128_cbc_encode, aes_128_cbc_decode, pkcs7_padding
 
 export run_dh_normal, run_dh_mitm
 export ManInTheMiddle, ManInTheMiddleGEq1, ManInTheMiddleGEqP, ManInTheMiddleGEqPMinus1
@@ -152,7 +152,7 @@ function run_dh_normal()
     @assert client_secret == server_secret
 
     client_iv = rand(UInt8, 16)
-    plaintext = pkcs7_padding!(copy(BIDU_MSG), 16)
+    plaintext = pkcs7_padding(BIDU_MSG, 16)
     client_ciphertext = aes_128_cbc_encode(plaintext, client_secret, client_iv)
     client_message = Message(client_ciphertext, client_iv)  # C -> S
 
@@ -196,7 +196,7 @@ function run_dh_mitm(mitm)
     server_secret = sha1(compute_symmetric_key(server, forge_c_handshake))[1:16]
 
     client_iv = rand(UInt8, 16)
-    plaintext = pkcs7_padding!(copy(BIDU_MSG), 16)
+    plaintext = pkcs7_padding(BIDU_MSG, 16)
     client_ciphertext = aes_128_cbc_encode(plaintext, client_secret, client_iv)
     client_message = Message(client_ciphertext, client_iv)  # C -> M -> S
 

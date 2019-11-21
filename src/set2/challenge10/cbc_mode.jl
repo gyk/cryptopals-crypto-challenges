@@ -2,7 +2,7 @@ using Nettle: Encryptor, encrypt
 
 export aes_128_ecb_encode, aes_128_cbc_decode, aes_128_cbc_encode
 
-#====== Encoder =====#
+#===== Encoder =====#
 function aes_128_ecb_encode(plaintext::AbstractVector{UInt8},
                             key::AbstractVector{UInt8})::Vector{UInt8}
     @assert length(plaintext) % 16 == 0 && length(key) == 16
@@ -27,7 +27,7 @@ function aes_128_cbc_encode(plaintext::AbstractVector{UInt8},
     enc
 end
 
-#====== Decoder =====#
+#===== Decoder =====#
 using CryptopalsCryptoChallenges.Set1: aes_128_ecb_decode
 
 function aes_128_cbc_decode(ciphertext::AbstractVector{UInt8},
@@ -47,7 +47,7 @@ function aes_128_cbc_decode(ciphertext::AbstractVector{UInt8},
     dec
 end
 
-#====== Test =====#
+#===== Test =====#
 using Nettle: decrypt
 "A reference implementation of AES-128 CBC decoder."
 function _aes_128_cbc_decode(ciphered::AbstractVector{UInt8},
