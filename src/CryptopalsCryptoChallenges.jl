@@ -8,5 +8,6 @@ include("set3/Set3.jl")
 include("set4/Set4.jl")
 include("set5/Set5.jl")
 include("set6/Set6.jl")
+include("set7/Set7.jl")
 
 end
